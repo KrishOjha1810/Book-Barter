@@ -1,5 +1,27 @@
 const Book = require("./book.model");
 
+const searchBooks = async (req, res) => {
+    const { query } = req.query;
+
+    if (!query) {
+        return res.status(400).send({ message: "Search query is required" });
+    }
+
+    try {
+        const books = await Book.find({
+            $or: [
+                { title: { $regex: query, $options: "i" } },
+                { category: { $regex: query, $options: "i" } },
+                { description: { $regex: query, $options: "i" } }
+            ]
+        });
+        res.status(200).send(books);
+    } catch (error) {
+        console.error("Error searching for books", error);
+        res.status(500).send({ message: "Failed to search for books" });
+    }
+};
+
 const postABook = async (req, res) => {
     try {
         const newBook = await Book({...req.body});
@@ -79,5 +101,5 @@ module.exports = {
     getAllBooks,
     getSingleBook,
     UpdateBook,
-    deleteABook
+    deleteABook,
 }

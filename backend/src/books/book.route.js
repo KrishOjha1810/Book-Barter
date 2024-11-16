@@ -9,6 +9,7 @@ const router =  express.Router();
 // get =  when get something back from db
 // put/patch = when edit or update something
 // delete = when delete something
+//Search a book 
 
 // post a book
 router.post("/create-book", verifyAdminToken, postABook)
